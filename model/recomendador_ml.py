@@ -4,19 +4,15 @@ from surprise import accuracy
 import os
 import pandas as pd 
 
-# Cargar datos
 ratings = pd.read_csv("ratings.csv")
 movies = pd.read_csv("movies.csv")
 print("Datos cargados: ratings.csv y movies.csv")
 
-# Inicialización de Reader y Dataset
 reader = Reader(rating_scale=(0.5, 5.0))
 data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
 
-# Nombre del archivo donde se guarda el modelo
 modelo_guardado = 'modelo_entrenado_grande.pkl'
 
-# Función para entrenar y guardar el modelo
 def entrenar_y_guardar_modelo():
     print("Entrenando un nuevo modelo...")
     trainset, testset = train_test_split(data, test_size=0.2, random_state=42)
@@ -32,12 +28,11 @@ def entrenar_y_guardar_modelo():
         print(f"Error al guardar el modelo: {e}")
     return model
 
-# Verificar si el modelo existe
 model = None
 if os.path.exists(modelo_guardado):
     print("Cargando el modelo entrenado...")
     try:
-        model = dump.load(modelo_guardado)[0][0]  # Solo agarramos el modelo
+        model = dump.load(modelo_guardado)[0][0] 
         print("Modelo cargado con éxito.")
     except Exception as e:
         print(f"Error al cargar el modelo: {e}")
@@ -46,10 +41,8 @@ else:
     print("No se encontró el modelo entrenado. Entrenando un nuevo modelo...")
     model = entrenar_y_guardar_modelo()
 
-# Verificar el tipo de objeto model
 print(f"Tipo de modelo cargado o entrenado: {type(model)}")
 
-# Mostrar películas ya valoradas
 def mostrar_peliculas_valoradas(usuario_id):
     valoradas = ratings[ratings['userId'] == usuario_id]
     if valoradas.empty:
@@ -62,7 +55,6 @@ def mostrar_peliculas_valoradas(usuario_id):
         titulo = movies[movies['movieId'] == movie_id]['title'].values[0]
         print(f"- {titulo} (nota: {rating})")
 
-# Función para recomendar películas
 def recomendar_peliculas(usuario_id, n=5):
     if not model:
         print("El modelo no se ha cargado correctamente.")
@@ -85,7 +77,6 @@ def recomendar_peliculas(usuario_id, n=5):
         titulo = movies[movies['movieId'] == movie_id]['title'].values[0]
         print(f"👉 {titulo} (predicción: {score:.2f})")
 
-# Preguntar por usuario y número de recomendaciones
 try:
     usuario_id = int(input("¿Para qué ID de usuario quieres recomendaciones? "))
     n = int(input("¿Cuántas películas quieres que te recomiende? "))
