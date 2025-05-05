@@ -1,0 +1,23 @@
+<h2>Recomendador de Películas</h2>
+
+<form (ngSubmit)="obtenerRecomendaciones()">
+  <label>
+    ID de usuario:
+    <input type="number" [(ngModel)]="userId" name="userId" required>
+  </label>
+  <br><br>
+  <label>
+    ¿Cuántas recomendaciones?
+    <input type="number" [(ngModel)]="nRecomendaciones" name="nRecomendaciones" required>
+  </label>
+  <br><br>
+  <button type="submit">Obtener recomendaciones</button>
+</form>
+
+<div *ngIf="error" style="color:red; margin-top: 10px;">{{ error }}</div>
+
+<ul *ngIf="recomendaciones.length > 0" style="margin-top: 20px;">
+  <li *ngFor="let rec of recomendaciones">
+    {{ rec.title }} (score: {{ rec.score }})
+  </li>
+</ul>
