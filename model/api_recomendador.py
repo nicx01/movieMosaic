@@ -19,11 +19,14 @@ app.add_middleware(
 MODELO_PATH = 'modelo_entrenado_grande.pkl'
 MOVIES_PATH = 'movies.csv'
 RATINGS_PATH = 'ratings.csv'
+LINKS_PATH = 'links.csv'
 
 # Carga datos y modelo al iniciar la API
 print("Cargando datos y modelo...")
 movies = pd.read_csv(MOVIES_PATH)
 ratings = pd.read_csv(RATINGS_PATH)
+links = pd.read_csv(LINKS_PATH)
+links = links.set_index('movieId')
 
 if not os.path.exists(MODELO_PATH):
     raise RuntimeError(f"Modelo no encontrado en {MODELO_PATH}. Entrena el modelo primero.")
@@ -72,7 +75,13 @@ def recomendar(request: RecomendacionRequest):
     recomendaciones = []
     for movie_id, score in top_n:
         titulo = movies[movies['movieId'] == movie_id]['title'].values[0]
-        recomendaciones.append({"movieId": int(movie_id), "title": titulo, "score": round(score, 2)})
+        tmdb_id = get_tmdb_id(movie_id)
+        recomendaciones.append({
+            "movieId": int(movie_id),
+            "title": titulo,
+            "score": round(score, 2),
+            "tmdbId": tmdb_id
+        })
 
     return {"user_id": user_id, "recomendaciones": recomendaciones}
 
@@ -112,3 +121,9 @@ def recomendar_personalizado(request: RecomendarPersonalizadoRequest):
         recomendaciones.append({"movieId": int(movie_id), "title": titulo, "score": round(score, 2)})
 
     return {"recomendaciones": recomendaciones}
+def get_tmdb_id(movie_id):
+    try:
+        tmdb_id = int(links.loc[movie_id]['tmdbId'])
+        return tmdb_id if tmdb_id > 0 else None
+    except Exception:
+        return None

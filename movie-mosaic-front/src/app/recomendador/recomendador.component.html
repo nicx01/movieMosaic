@@ -1,23 +1,28 @@
-<h2>Recomendador de Películas</h2>
+<div class="container">
+  <h2>Recomendador Movie Mosaic</h2>
 
-<form (ngSubmit)="obtenerRecomendaciones()">
-  <label>
-    ID de usuario:
-    <input type="number" [(ngModel)]="userId" name="userId" required>
-  </label>
-  <br><br>
-  <label>
-    ¿Cuántas recomendaciones?
-    <input type="number" [(ngModel)]="nRecomendaciones" name="nRecomendaciones" required>
-  </label>
-  <br><br>
-  <button type="submit">Obtener recomendaciones</button>
-</form>
+  <form (ngSubmit)="obtenerRecomendaciones()" class="form">
+    <label for="userId">ID de Usuario:</label>
+    <input type="number" id="userId" [(ngModel)]="userId" name="userId" min="1" required>
 
-<div *ngIf="error" style="color:red; margin-top: 10px;">{{ error }}</div>
+    <label for="nRecomendaciones">Número de recomendaciones:</label>
+    <input type="number" id="nRecomendaciones" [(ngModel)]="nRecomendaciones" name="nRecomendaciones" min="1" max="20" required>
 
-<ul *ngIf="recomendaciones.length > 0" style="margin-top: 20px;">
-  <li *ngFor="let rec of recomendaciones">
-    {{ rec.title }} (score: {{ rec.score }})
-  </li>
-</ul>
+    <button type="submit">Obtener Recomendaciones</button>
+  </form>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <div class="grid" *ngIf="recomendaciones.length > 0">
+    <div class="card" *ngFor="let rec of recomendaciones">
+      <img *ngIf="rec.posterUrl; else noImage" [src]="rec.posterUrl" [alt]="rec.title" />
+      <ng-template #noImage>
+        <div class="no-image">Sin imagen</div>
+      </ng-template>
+      <div class="info">
+        <h3>{{ rec.title }}</h3>
+        <p>Puntuación: {{ rec.score }}</p>
+      </div>
+    </div>
+  </div>
+</div>
