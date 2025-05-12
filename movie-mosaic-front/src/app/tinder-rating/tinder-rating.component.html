@@ -1,0 +1,45 @@
+<!-- tinder-rating.component.html -->
+<div *ngIf="indiceActual < maxValoraciones && peliculas.length > 0" class="card">
+    <div>
+        <ng-container *ngIf="peliculas[indiceActual]?.posterUrl; else noPoster">
+            <img [src]="peliculas[indiceActual].posterUrl" alt="Póster"
+                style="width:100%; border-radius:8px; margin-bottom:15px;">
+        </ng-container>
+        <ng-template #noPoster>
+            <div class="no-image">Sin imagen</div>
+        </ng-template>
+    </div>
+    <div class="info">
+        <h3>{{ peliculas[indiceActual].title }}</h3>
+        <div class="rating-buttons">
+            <button *ngFor="let n of [1,2,3,4,5]" (click)="valorar(n)">
+                {{ n }} ⭐
+            </button>
+        </div>
+        <div class="progreso">
+            {{ indiceActual + 1 }}/{{ maxValoraciones }}
+        </div>
+    </div>
+</div>
+<div *ngIf="indiceActual >= peliculas.length" style="text-align:center; margin-top: 20px;">
+    <button (click)="cargarMasPeliculas()" style="padding:10px 22px; border-radius:6px; background:#3498db; color:white; border:none; font-weight:bold; cursor:pointer;">
+      Seguir valorando más películas
+    </button>
+  </div>
+  
+<div *ngIf="recomendaciones.length > 0">
+    <h2 style="text-align:center;">Tus recomendaciones</h2>
+    <div class="grid">
+        <div *ngFor="let rec of recomendaciones" class="card">
+            <ng-container *ngIf="rec.posterUrl; else noPosterRec">
+                <img [src]="rec.posterUrl" alt="Póster" style="width:100%; border-radius:8px; margin-bottom:15px;">
+            </ng-container>
+            <ng-template #noPosterRec>
+                <div class="no-image">Sin imagen</div>
+            </ng-template>
+            <div class="info">
+                <h3>{{ rec.title }}</h3>
+            </div>
+        </div>
+    </div>
+</div>

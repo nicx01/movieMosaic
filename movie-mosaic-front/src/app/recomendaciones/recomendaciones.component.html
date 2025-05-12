@@ -1,0 +1,29 @@
+<div *ngIf="!usuario">
+    <div class="card">Debes iniciar sesión primero.</div>
+  </div>
+  <div *ngIf="usuario && recomendaciones.length === 0">
+    <div class="card">Cargando recomendaciones...</div>
+  </div>
+  <div *ngIf="usuario && recomendaciones.length > 0">
+    <h2>Recomendaciones para {{ usuario }}</h2>
+    <div style="text-align:center; margin-bottom: 20px;">
+      <button (click)="refresh()" style="padding:8px 20px; border-radius:5px; background:#3498db; color:white; border:none; font-weight:bold; cursor:pointer;">
+        🔄 Actualizar recomendaciones
+      </button>
+    </div>
+    <div class="grid">
+      <div *ngFor="let rec of recomendaciones" class="card">
+        <ng-container *ngIf="rec.posterUrl; else noPoster">
+          <img [src]="rec.posterUrl" alt="Póster" style="width:100%; border-radius:8px; margin-bottom:15px;">
+        </ng-container>
+        <ng-template #noPoster>
+          <div class="no-image">Sin imagen</div>
+        </ng-template>
+        <div class="info">
+          <h3>{{ rec.title }}</h3>
+          <p>Puntuación: {{ rec.score }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
