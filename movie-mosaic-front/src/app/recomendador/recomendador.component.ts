@@ -50,11 +50,12 @@ export class RecomendadorComponent {
         forkJoin(observables).subscribe((results: any[]) => {
           this.recomendaciones = recomendaciones.map((rec: Recomendacion, i: number) => {
             const result = results[i];
+            //console.log(`Sin imagen: movieId=${rec.movieId}, title="${rec.title}", tmdbId=${rec.tmdbId}`);
             if (result && result.poster_path) {
               rec.posterUrl = `https://image.tmdb.org/t/p/w300${result.poster_path}`;
+              console.log("nico");
             } else {
               rec.posterUrl = undefined;
-              console.log(`Sin imagen: movieId=${rec.movieId}, title="${rec.title}", tmdbId=${rec.tmdbId}`);
             }
             return rec;
           });

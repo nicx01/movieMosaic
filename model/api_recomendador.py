@@ -98,7 +98,7 @@ def buscar_pelicula(nombre: str = Query(..., min_length=2, description="Parte de
 
 @app.post("/recomendar_personalizado")
 def recomendar_personalizado(request: RecomendarPersonalizadoRequest):
-    user_id = 999999  # ID ficticio para el usuario temporal
+    user_id = 200000  # ID ficticio para el usuario temporal
     user_ratings = pd.DataFrame(
         [{"userId": user_id, "movieId": v.movieId, "rating": v.rating} for v in request.valoraciones]
     )
@@ -118,12 +118,33 @@ def recomendar_personalizado(request: RecomendarPersonalizadoRequest):
     recomendaciones = []
     for movie_id, score in top_n:
         titulo = movies[movies['movieId'] == movie_id]['title'].values[0]
-        recomendaciones.append({"movieId": int(movie_id), "title": titulo, "score": round(score, 2)})
+        tmdb_id = get_tmdb_id(movie_id)  
+        recomendaciones.append({
+            "movieId": int(movie_id),
+            "title": titulo,
+            "score": round(score, 2),
+            "tmdbId": tmdb_id            
+        })
 
     return {"recomendaciones": recomendaciones}
+
 def get_tmdb_id(movie_id):
     try:
         tmdb_id = int(links.loc[movie_id]['tmdbId'])
         return tmdb_id if tmdb_id > 0 else None
     except Exception:
         return None
+    
+
+@app.get("/peliculas_aleatorias")
+def peliculas_aleatorias(cantidad: int = Query(20, gt=0, le=100)):
+    sample = movies.sample(n=min(cantidad, len(movies)), random_state=None)
+    resultado = [
+        {
+            "movieId": int(row["movieId"]),
+            "title": row["title"],
+            "tmdbId": get_tmdb_id(row["movieId"])
+        }
+        for _, row in sample.iterrows()
+    ]
+    return {"peliculas": resultado}
