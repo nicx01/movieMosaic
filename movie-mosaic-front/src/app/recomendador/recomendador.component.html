@@ -15,14 +15,29 @@
 
   <div class="grid" *ngIf="recomendaciones.length > 0">
     <div class="card" *ngFor="let rec of recomendaciones">
-      <img *ngIf="rec.posterUrl; else noImage" [src]="rec.posterUrl" [alt]="rec.title" />
-      <ng-template #noImage>
-        <div class="no-image">Sin imagen</div>
-      </ng-template>
-      <div class="info">
-        <h3>{{ rec.title }}</h3>
-        <p>Puntuación: {{ rec.score }}</p>
-      </div>
+      <a *ngIf="rec.tmdbId" 
+         [href]="'https://www.themoviedb.org/movie/' + rec.tmdbId" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        <img *ngIf="rec.posterUrl; else noImage" [src]="rec.posterUrl" [alt]="rec.title" />
+        <ng-template #noImage>
+          <div class="no-image">Sin imagen</div>
+        </ng-template>
+        <div class="info">
+          <h3>{{ rec.title }}</h3>
+          <p>Puntuación: {{ rec.score }}</p>
+        </div>
+      </a>
+      <ng-container *ngIf="!rec.tmdbId">
+        <img *ngIf="rec.posterUrl; else noImage2" [src]="rec.posterUrl" [alt]="rec.title" />
+        <ng-template #noImage2>
+          <div class="no-image">Sin imagen</div>
+        </ng-template>
+        <div class="info">
+          <h3>{{ rec.title }}</h3>
+          <p>Puntuación: {{ rec.score }}</p>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

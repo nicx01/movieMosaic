@@ -20,7 +20,7 @@ interface Recomendacion {
   styleUrls: ['./recomendador.component.css']
 })
 export class RecomendadorComponent {
-  private tmdbApiKey = 'a';
+  private tmdbApiKey = 'API_KEY';
   userId: number = 1;
   nRecomendaciones: number = 5;
   recomendaciones: Recomendacion[] = [];
@@ -53,7 +53,6 @@ export class RecomendadorComponent {
             //console.log(`Sin imagen: movieId=${rec.movieId}, title="${rec.title}", tmdbId=${rec.tmdbId}`);
             if (result && result.poster_path) {
               rec.posterUrl = `https://image.tmdb.org/t/p/w300${result.poster_path}`;
-              console.log("nico");
             } else {
               rec.posterUrl = undefined;
             }

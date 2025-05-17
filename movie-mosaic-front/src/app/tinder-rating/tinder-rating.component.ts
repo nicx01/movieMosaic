@@ -30,7 +30,7 @@ export class TinderRatingComponent {
   indiceActual = 0;
   maxValoraciones = 30;
   recomendaciones: any[] = [];
-  private tmdbApiKey = 'a';
+  private tmdbApiKey = 'API_KEY';
   usuario: string | null = null;
   constructor(private http: HttpClient) {
     this.usuario = localStorage.getItem('usuario');

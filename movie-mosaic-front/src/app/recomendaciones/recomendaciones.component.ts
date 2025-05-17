@@ -14,7 +14,7 @@ import { catchError } from 'rxjs/operators';
 export class RecomendacionesComponent implements OnInit {
   usuario: string | null = null;
   recomendaciones: any[] = [];
-  private tmdbApiKey = 'a';
+  private tmdbApiKey = 'API_KEY';
 
   constructor(private http: HttpClient) {}
 
